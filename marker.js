@@ -45,6 +45,7 @@ let myLayers = {
 }
 
 myMap.addLayer(myLayers.geolandbasemap); // http://leafletjs.com/reference-1.3.0.html#map-addlayer
+// geolandbasemap ist voreingestellt
 
 let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.html#control-layers
     "OpenStreetMap" : myLayers.osm,
@@ -71,26 +72,15 @@ L.control.scale({ // http://leafletjs.com/reference-1.3.0.html#control-scale
 
 myMap.setView([47.267,11.383],11); // http://leafletjs.com/reference-1.3.0.html#map-setview
 
-/* Objekte erstellen
-let myLayers = {
-    wert : 100,
-    alter : 50,
-    farbe : "grün",
-    liste : [1,2,3,4],
-    nocheinobjekt = {
-
-    }
-}
-*/
-
-
-/*
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png")
-// let url = "https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png"
-
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmapoverlay/normal/google3857/{z}/{y}/{x}.png")
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/{z}/{y}/{x}.png")
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg")
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg")
-*/
-
+const uni = [47.264,11.385];
+const usi = [47.257, 11.356];
+const technik = [47.263, 11.343];
+const markerOptions = {
+    title: "Universität Innsbruck",
+    draggable: true,
+    opacity: 0.7,
+};
+L.marker(uni, markerOptions).addTo(myMap);
+L.marker(usi, markerOptions).addTo(myMap);
+L.marker(technik, markerOptions).addTo(myMap);
+myMap.setView(uni,14);
