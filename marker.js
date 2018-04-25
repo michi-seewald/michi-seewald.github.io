@@ -102,6 +102,15 @@ L.marker(igls, {
     title: "Igls",
 }).addTo(markerGroup);
 
+let lift = L.polyline([igls, patscherkofel], {
+    color: 'red',
+})
+myMap.addLayer(lift)
+
+let uniPolygon = L.polygon([uni, usi, technik]);
+myMap.addLayer(uniPolygon);
+uniPolygon.bindPopuup("Ende!")
+
 myMap.fitBounds(markerGroup.getBounds())
 
 
