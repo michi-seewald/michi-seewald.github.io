@@ -1,4 +1,5 @@
 let myMap = L.map("mapdiv"); // http://leafletjs.com/reference-1.3.0.html#map-l-map
+let markerGroup = L.featureGroup();
 let myLayers = {
     osm : L.tileLayer( // http://leafletjs.com/reference-1.3.0.html#tilelayer
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -47,6 +48,7 @@ let myLayers = {
 myMap.addLayer(myLayers.geolandbasemap); // http://leafletjs.com/reference-1.3.0.html#map-addlayer
 // geolandbasemap ist voreingestellt
 
+
 let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.html#control-layers
     "OpenStreetMap" : myLayers.osm,
     "basemap.at Grundkarte" : myLayers.geolandbasemap,
@@ -56,6 +58,7 @@ let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.ht
     "basemap.at Orthofoto" : myLayers.bmaporthofoto30cm,
 },{
     "basemap.at Overlay" : myLayers.bmapoverlay,
+    "Marker" : markerGroup,
 },{
     collapsed: false,
 });
@@ -75,12 +78,30 @@ myMap.setView([47.267,11.383],11); // http://leafletjs.com/reference-1.3.0.html#
 const uni = [47.264,11.385];
 const usi = [47.257, 11.356];
 const technik = [47.263, 11.343];
+const patscherkofel = [47.217, 11.466];
+const igls = [47.232, 11.408];
+
+myMap.addLayer(markerGroup);
 const markerOptions = {
     title: "Universität Innsbruck",
     draggable: true,
     opacity: 0.7,
 };
-L.marker(uni, markerOptions).addTo(myMap);
-L.marker(usi, markerOptions).addTo(myMap);
-L.marker(technik, markerOptions).addTo(myMap);
-myMap.setView(uni,14);
+L.marker(uni, markerOptions).addTo(markerGroup);
+L.marker(usi, markerOptions).addTo(markerGroup);
+L.marker(technik, markerOptions).addTo(markerGroup);
+let patscherkofelMarker = L.marker(patscherkofel, {
+    title: "Patscherkofel",
+}).addTo(markerGroup);
+
+patscherkofelMarker.bindPopup("<p>Patscherkofel</p><img style='width:200px' src = 'js/leaflet/images/patscherkofel.jpg' alt = 'Patscherkofl' />")
+
+//alternativ: .addTo(markerGroup.bindPopup())
+
+L.marker(igls, {
+    title: "Igls",
+}).addTo(markerGroup);
+
+myMap.fitBounds(markerGroup.getBounds())
+
+
