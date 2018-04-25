@@ -55,7 +55,10 @@ let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.ht
     "basemap.at Orthofoto" : myLayers.bmaporthofoto30cm,
 },{
     "basemap.at Overlay" : myLayers.bmapoverlay,
+},{
+    collapsed: false,
 });
+
 myMap.addControl(myMapControl); // http://leafletjs.com/reference-1.3.0.html#map-addcontrol
 
 L.control.scale({ // http://leafletjs.com/reference-1.3.0.html#control-scale
