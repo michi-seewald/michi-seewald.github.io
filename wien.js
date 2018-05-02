@@ -1,5 +1,5 @@
 let myMap = L.map("mapdiv"); // http://leafletjs.com/reference-1.3.0.html#map-l-map
-const awsGroup = L.featureGroup();
+const wienGroup = L.featureGroup();
 let myLayers = {
     osm : L.tileLayer( // http://leafletjs.com/reference-1.3.0.html#tilelayer
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -56,7 +56,7 @@ let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.ht
     "basemap.at Orthofoto" : myLayers.bmaporthofoto30cm,
 },{
     "basemap.at Overlay" : myLayers.bmapoverlay,
-    "Wetterstationen": awsGroup,
+    "Stadtspaziergang": wienGroup,
 },{
     collapsed: false,
 });
@@ -73,15 +73,15 @@ L.control.scale({ // http://leafletjs.com/reference-1.3.0.html#control-scale
 
 myMap.setView([47.267,11.383],8); // http://leafletjs.com/reference-1.3.0.html#map-setview
 
-console.log("Stationen: ", stationen);
+console.log("Spaziergang: ", spaziergang);
 
-myMap.addLayer(awsGroup);
-let geojson = L.geoJSON(stationen).addTo(awsGroup);
+// myMap.addLayer(wienGroup);
+let geojson = L.geoJSON(spaziergang).addTo(wienGroup);
 geojson.bindPopup(function(layer) {
     const props = layer.feature.properties;
-    const popupText = `<h1>${props.name}</h1>
-    <p>Temperatur: ${props.LT} °C</p>`;
+    const popupText = `<h1>${props.NAME}</h1>
+    <p>${props.BEMERKUNG}</p>`;
     return popupText;
 });
 
-myMap.fitBounds(awsGroup.getBounds());
+myMap.fitBounds(wienGroup.getBounds());
