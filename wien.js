@@ -71,12 +71,38 @@ L.control.scale({ // http://leafletjs.com/reference-1.3.0.html#control-scale
 }).addTo(myMap);
 
 
-myMap.setView([47.267,11.383],8); // http://leafletjs.com/reference-1.3.0.html#map-setview
+myMap.setView([48.226653,16.378609],8); // http://leafletjs.com/reference-1.3.0.html#map-setview
 
-console.log("Spaziergang: ", spaziergang);
+// console.log("Spaziergang: ", spaziergang);
 
-// myMap.addLayer(wienGroup);
-let geojson = L.geoJSON(spaziergang).addTo(wienGroup);
+async function addGeojson (url) {
+    // console.log("Url wird geladen: ", url);
+    const response = await fetch(url);
+    // console.log("Response: ", response);
+    const wiendata = await response.json ();
+    console.log("GeoJson: ", wiendata);
+    const geojson = L.geoJSON(wiendata, {
+        style: function(feature) {
+            return {color: "#ff0000" };
+        },
+        pointToLayer: function(geoJsonPoint, latlng) {
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'icons/sight-2.png'
+                })
+            });
+        }
+    });
+    wienGroup.addLayer(geojson);
+    myMap.fitBounds(wienGroup.getBounds());
+}
+const url = "https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&srsName=EPSG:4326&outputFormat=json&typeName=ogdwien:SPAZIERPUNKTOGD,ogdwien:SPAZIERLINIEOGD"
+
+myMap.addLayer(wienGroup);
+
+addGeojson(url);
+
+/*let geojson = L.geoJSON(spaziergang).addTo(wienGroup);
 geojson.bindPopup(function(layer) {
     const props = layer.feature.properties;
     const popupText = `<h1>${props.NAME}</h1>
@@ -85,3 +111,4 @@ geojson.bindPopup(function(layer) {
 });
 
 myMap.fitBounds(wienGroup.getBounds());
+*/
