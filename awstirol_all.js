@@ -1,4 +1,5 @@
 let myMap = L.map("mapdiv"); // http://leafletjs.com/reference-1.3.0.html#map-l-map
+const awsGroup = L.featureGroup();
 let myLayers = {
     osm : L.tileLayer( // http://leafletjs.com/reference-1.3.0.html#tilelayer
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -55,6 +56,7 @@ let myMapControl = L.control.layers({ // http://leafletjs.com/reference-1.3.0.ht
     "basemap.at Orthofoto" : myLayers.bmaporthofoto30cm,
 },{
     "basemap.at Overlay" : myLayers.bmapoverlay,
+    "Wetterstationen": awsGroup,
 },{
     collapsed: false,
 });
@@ -69,28 +71,17 @@ L.control.scale({ // http://leafletjs.com/reference-1.3.0.html#control-scale
 }).addTo(myMap);
 
 
-myMap.setView([47.267,11.383],11); // http://leafletjs.com/reference-1.3.0.html#map-setview
+myMap.setView([47.267,11.383],8); // http://leafletjs.com/reference-1.3.0.html#map-setview
 
-/* Objekte erstellen
-let myLayers = {
-    wert : 100,
-    alter : 50,
-    farbe : "grün",
-    liste : [1,2,3,4],
-    nocheinobjekt = {
+console.log("Stationen: ", stationen);
 
-    }
-}
-*/
+myMap.addLayer(awsGroup);
+let geojson = L.geoJSON(stationen).addTo(awsGroup);
+geojson.bindPopup(function(layer) {
+    const props = layer.feature.properties;
+    const popupText = `<h1>${props.name}</h1>
+    <p>Temperatur: ${props.LT} °C</p>`;
+    return popupText;
+});
 
-
-/*
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png")
-// let url = "https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png"
-
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmapoverlay/normal/google3857/{z}/{y}/{x}.png")
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/{z}/{y}/{x}.png")
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg")
-myLayer = L.tileLayer("https://maps.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg")
-*/
-
+myMap.fitBounds(awsGroup.getBounds());
