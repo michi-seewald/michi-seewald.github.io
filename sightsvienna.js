@@ -79,13 +79,10 @@ async function addGeojson (url) {
     const sightsdata = await response.json ();
     console.log("GeoJson: ", sightsdata);
     const geojson = L.geoJSON(sightsdata, {
-        style: function(feature) {
-            return {color: "#ff0000" };
-        },
-        pointToLayer: function(geoJsonPoint, latlng) {
+            pointToLayer: function(geoJsonPoint, latlng) {
             return L.marker(latlng, {
                 icon: L.icon({
-                    iconUrl: 'icons/sight-2.png'
+                    iconUrl: 'icons/sight-3.png'
                 })
             });
         }        
