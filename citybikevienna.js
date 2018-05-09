@@ -83,6 +83,11 @@ geojson.bindPopup(function(layer) {
     return popupText;
 });
 const  hash = new L.Hash(myMap);
+myMap.addControl( new L.Control.Search({
+    layer: markers,
+    propertyName: 'STATION',
+    }) 
+);
 
 
 
