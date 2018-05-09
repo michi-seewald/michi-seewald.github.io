@@ -73,12 +73,22 @@ L.control.scale({
 
 myMap.setView([48.226653,16.378609],8);
 
-let geojson = L.geoJSON(bikepoints).addTo(bikeGroup);
+const markers = L.markerClusterGroup();
+myMap.addLayer(markers);
+
+let geojson = L.geoJSON(bikepoints).addTo(markers);
 geojson.bindPopup(function(layer) {
     const props = layer.feature.properties;
     const popupText = `<h1>${props.STATION}</h1>`;
     return popupText;
 });
+const  hash = new L.Hash(myMap);
+
+
+
 
 myMap.addLayer(bikeGroup);
 myMap.fitBounds(bikeGroup.getBounds());
+
+// https://github.com/mlevans/leaflet-hash
+// https://github.com/Leaflet/Leaflet.markercluster
