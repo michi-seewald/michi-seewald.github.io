@@ -75,5 +75,32 @@ async function ladeGeojsonLayer(url) {
     karte.fitBounds(geojsonGruppe.getBounds());
 }
 
+// bevor alle Layer geladen werden, sollen Datens#tze sortiert werden
+wienDatensaetze.sort(function(a,b) {
+    if (a.titel < b.titel) {
+        return -1;
+    } else if (a.titel > b. titel) {
+        return 1;
+    } else {
+        return 0;
+    }
+})
+
 // den GeoJSON Layer für Grillplätze laden
-ladeGeojsonLayer("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:GRILLPLATZOGD&srsName=EPSG:4326&outputFormat=json");
+// ladeGeojsonLayer("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:GRILLPLATZOGD&srsName=EPSG:4326&outputFormat=json");
+// es soll der erste Datensatz geladen werden
+ladeGeojsonLayer(wienDatensaetze[2].json);
+
+let layerAuswahl = document.getElementById("layerAuswahl"); // zugreifen auf Auswahl
+for (datensatz of wienDatensaetze) {
+    layerAuswahl.innerHTML += `<option value="${datensatz.json}">${datensatz.titel}</option>`;
+    console.log(datensatz.json)    
+}
+
+// wenn sich Layerauswahl ändert soll Karte sich verändern
+layerAuswahl.onchange = function(evt) {
+    geojsonGruppe.clearLayers(); // bevor Karte neu geladen wird, wird Karte gelöscht
+    ladeGeojsonLayer(evt.target.value);
+}
+
+// console.log(wienDatensaetze)
