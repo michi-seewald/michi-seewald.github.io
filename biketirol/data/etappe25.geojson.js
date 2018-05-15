@@ -1,4 +1,4 @@
-const strecke = {
+var strecke = {
     "type": "FeatureCollection",
     "features": [
         {
