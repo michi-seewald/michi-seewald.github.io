@@ -97,10 +97,27 @@ myMap.addLayer(markerGroup);
 
 // GeoJSON Track als Linie in der Karte einzeichnen und auf Ausschnitt zoomen
 // Einbauen nicht über async, sondern über ein L.geoJSON() mit einem Javascript Objekt (wie beim ersten Stadtspaziergang Wien Beispiel)
-let geojson = L.geoJSON(strecke).addTo(etappe25Group);
+// let geojson = L.geoJSON(strecke).addTo(etappe25Group);
 myMap.addLayer(etappe25Group);
-myMap.fitBounds(etappe25Group.getBounds());
-let line = L.polyline(geojson, {color: 'blue'}).addTo(myMap);
+// myMap.fitBounds(etappe25Group.getBounds());
+// let line = L.polyline(geojson, {color: 'blue'}).addTo(myMap);
+
+
+// stattdessen: Strecke als GPX einfügen
+/*
+var gpx = '...'; // URL to your GPX file or the GPX itself
+new L.GPX(gpx, {
+    async: true}).on('loaded', function(e) {
+  myMap.fitBounds(e.target.getBounds());
+}).addTo(myMap);
+*/
+
+let gpxTrack = new L.GPX("data/etappe25.gpx", {
+    async : true,
+}).addTo(etappe25Group); // ad to overlay Group - eigentlich!
+gpxTrack.on("loaded", function(evt) {
+    myMap.fitBounds(evt.target.getBounds());
+});
 
 // Baselayer control für OSM, basemap.at, Elektronische Karte Tirol hinzufügen
 let myMapControl = L.control.layers({ 
