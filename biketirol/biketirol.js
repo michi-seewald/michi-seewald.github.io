@@ -112,10 +112,19 @@ new L.GPX(gpx, {
 }).addTo(myMap);
 */
 
-let gpxTrack = new L.GPX("data/etappe25.gpx", {
+let gpxTrack = new L.GPX("data/etappe25.gpx", { // https://github.com/mpetazzoni/leaflet-gpx
     async : true,
 }).addTo(etappe25Group); // ad to overlay Group - eigentlich!
 gpxTrack.on("loaded", function(evt) {
+    console.log(evt.target.get_distance().toFixed(0))
+    console.log(evt.target.get_elevation_min().toFixed(0))
+    console.log(evt.target.get_elevation_max().toFixed(0))
+    console.log(evt.target.get_elevation_gain().toFixed(0))
+    console.log(evt.target.get_elevation_loss().toFixed(0))
+
+    let laenge = evt.target.get_distance().toFixed(0);
+    document.getElementById("laenge").innerHTML = laenge
+
     myMap.fitBounds(evt.target.getBounds());
 });
 
