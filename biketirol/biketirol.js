@@ -12,7 +12,9 @@
 */
 
 // eine neue Leaflet Karte definieren
-let myMap = L.map("map");
+let myMap = L.map("map", {
+    fullscreenControl: true
+});
 
 const markerGroup = L.featureGroup();
 const etappe25Group = L.featureGroup();
