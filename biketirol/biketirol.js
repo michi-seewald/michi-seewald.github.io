@@ -52,17 +52,26 @@ let myLayers = {
     gdi_nomenklatur : L.tileLayer(
         "http://wmts.kartetirol.at/wmts/gdi_nomenklatur/GoogleMapsCompatible/{z}/{x}/{y}.png8",{
         attribution : "Datenquelle: <a href='https://www.tirol.gv.at/statistik-budget/tiris/tiris-geodatendienste/impressum-elektronische-karte-tirol/'>Land Tirol",
-        }
+        pane: "overlayPane",
+    }
     ),
 }
 
 myMap.addLayer(myLayers.geolandbasemap); 
 
-/*
-gdi_summer = L.featureGroup([myLayers.gdi_base_summer, myLayers.gdi_nomenklatur]);
-gdi_winter = L.featureGroup([myLayers.gdi_base_winter, myLayers.gdi_nomenklatur]);
-gdi_ortho = L.featureGroup([myLayers.gdi_base_ortho, myLayers.gdi_nomenklatur]);
-*/
+
+const gdi_summer = L.layerGroup([
+    myLayers.gdi_base_summer, 
+    myLayers.gdi_nomenklatur
+]);
+const gdi_winter = L.layerGroup([
+    myLayers.gdi_base_winter, 
+    myLayers.gdi_nomenklatur
+]);
+const gdi_ortho = L.layerGroup([
+    myLayers.gdi_base_ortho, 
+    myLayers.gdi_nomenklatur
+]);
 
 // Maßstab metrisch ohne inch
 L.control.scale({ 
@@ -125,6 +134,18 @@ gpxTrack.on("loaded", function(evt) {
     let laenge = evt.target.get_distance().toFixed(0);
     document.getElementById("laenge").innerHTML = laenge
 
+    let min = evt.target.get_elevation_min().toFixed(0);
+    document.getElementById("min").innerHTML = min
+
+    let max = evt.target.get_elevation_max().toFixed(0);
+    document.getElementById("max").innerHTML = max
+
+    let hinauf = evt.target.get_elevation_gain().toFixed(0);
+    document.getElementById("hinauf").innerHTML = hinauf
+
+    let hinab = evt.target.get_elevation_loss().toFixed(0);
+    document.getElementById("hinab").innerHTML = hinab
+
     myMap.fitBounds(evt.target.getBounds());
 });
 
@@ -132,9 +153,9 @@ gpxTrack.on("loaded", function(evt) {
 let myMapControl = L.control.layers({ 
     "OpenStreetMap" : myLayers.osm,
     "basemap.at Grundkarte" : myLayers.geolandbasemap,
-    "Karte Tirol Sommer" : myLayers.gdi_base_summer,
-    "Karte Tirol Winter" : myLayers.gdi_base_winter,
-    "Karte Tirol Orthofoto" : myLayers.gdi_base_ortho,
+    "Karte Tirol Sommer" : myLayers.gdi_summer,
+    "Karte Tirol Winter" : myLayers.gdi_winter,
+    "Karte Tirol Orthofoto" : myLayers.gdi_ortho,
 },{ // Overlay controls zum unabhängigem Ein-/Ausschalten der Route und Marker hinzufügen
     "Etappenstrecke" : etappe25Group,
 },{ 
