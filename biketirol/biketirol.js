@@ -59,6 +59,23 @@ let myLayers = {
 
 myMap.addLayer(myLayers.geolandbasemap); 
 
+
+// Baselayer control für OSM, basemap.at, Elektronische Karte Tirol hinzufügen
+let myMapControl = L.control.layers({ 
+    "OpenStreetMap" : myLayers.osm,
+    "basemap.at Grundkarte" : myLayers.geolandbasemap,
+    "Karte Tirol Sommer" : myLayers.gdi_base_summer,
+    "Karte Tirol Winter" : myLayers.gdi_base_winter,
+    "Karte Tirol Orthofoto" : myLayers.gdi_base_ortho,
+},{ // Overlay controls zum unabhängigem Ein-/Ausschalten der Route und Marker hinzufügen
+    "Etappenstrecke" : etappe25Group,
+},{ 
+    collapsed: true,
+});
+
+myMap.addControl(myMapControl); 
+
+
 /*
 const gdi_summer = L.layerGroup([
     myLayers.gdi_base_summer, 
@@ -105,6 +122,15 @@ L.marker(finish, L.icon({
 
 myMap.addLayer(markerGroup);
 
+// Höhenprofil control hinzufügen
+let hoehenProfil = L.control.elevation({
+    position : "topright",
+    theme : "steelblue-theme",
+    collapsed : true,
+}).addTo(myMap);
+
+
+
 // GeoJSON Track als Linie in der Karte einzeichnen und auf Ausschnitt zoomen
 // Einbauen nicht über async, sondern über ein L.geoJSON() mit einem Javascript Objekt (wie beim ersten Stadtspaziergang Wien Beispiel)
 // let geojson = L.geoJSON(strecke).addTo(etappe25Group);
@@ -150,17 +176,9 @@ gpxTrack.on("loaded", function(evt) {
     myMap.fitBounds(evt.target.getBounds());
 });
 
-// Baselayer control für OSM, basemap.at, Elektronische Karte Tirol hinzufügen
-let myMapControl = L.control.layers({ 
-    "OpenStreetMap" : myLayers.osm,
-    "basemap.at Grundkarte" : myLayers.geolandbasemap,
-    "Karte Tirol Sommer" : myLayers.gdi_base_summer,
-    "Karte Tirol Winter" : myLayers.gdi_base_winter,
-    "Karte Tirol Orthofoto" : myLayers.gdi_base_ortho,
-},{ // Overlay controls zum unabhängigem Ein-/Ausschalten der Route und Marker hinzufügen
-    "Etappenstrecke" : etappe25Group,
-},{ 
-    collapsed: false,
-});
 
-myMap.addControl(myMapControl); 
+gpxTrack.on('addline', function(evt){
+    hoehenProfil.addData(evt.line);
+})
+// um die Position zu bestimmen im leaflet.elevation.src.js und min.js L.Browser.touch durch L.Browser.mobile ersetzen
+
