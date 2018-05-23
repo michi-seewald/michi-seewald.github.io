@@ -59,7 +59,7 @@ let myLayers = {
 
 myMap.addLayer(myLayers.geolandbasemap); 
 
-
+/*
 const gdi_summer = L.layerGroup([
     myLayers.gdi_base_summer, 
     myLayers.gdi_nomenklatur
@@ -72,6 +72,7 @@ const gdi_ortho = L.layerGroup([
     myLayers.gdi_base_ortho, 
     myLayers.gdi_nomenklatur
 ]);
+*/
 
 // Maßstab metrisch ohne inch
 L.control.scale({ 
@@ -153,9 +154,9 @@ gpxTrack.on("loaded", function(evt) {
 let myMapControl = L.control.layers({ 
     "OpenStreetMap" : myLayers.osm,
     "basemap.at Grundkarte" : myLayers.geolandbasemap,
-    "Karte Tirol Sommer" : myLayers.gdi_summer,
-    "Karte Tirol Winter" : myLayers.gdi_winter,
-    "Karte Tirol Orthofoto" : myLayers.gdi_ortho,
+    "Karte Tirol Sommer" : myLayers.gdi_base_summer,
+    "Karte Tirol Winter" : myLayers.gdi_base_winter,
+    "Karte Tirol Orthofoto" : myLayers.gdi_base_ortho,
 },{ // Overlay controls zum unabhängigem Ein-/Ausschalten der Route und Marker hinzufügen
     "Etappenstrecke" : etappe25Group,
 },{ 
