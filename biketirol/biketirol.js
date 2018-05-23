@@ -19,6 +19,9 @@ let myMap = L.map("map", {
 const markerGroup = L.featureGroup();
 const etappe25Group = L.featureGroup();
 
+let OverlaySteigung = L.featureGroup().addTo(myMap)
+
+
 // Grundkartenlayer mit OSM, basemap.at, Elektronische Karte Tirol (Sommer, Winter, Orthophoto jeweils mit Beschriftung) über L.featureGroup([]) definieren
 // WMTS URLs siehe https://www.data.gv.at/katalog/dataset/land-tirol_elektronischekartetirol
 let myLayers = {
@@ -69,6 +72,7 @@ let myMapControl = L.control.layers({
     "Karte Tirol Orthofoto" : myLayers.gdi_base_ortho,
 },{ // Overlay controls zum unabhängigem Ein-/Ausschalten der Route und Marker hinzufügen
     "Etappenstrecke" : etappe25Group,
+    "Steigungslinie" : OverlaySteigung,
 },{ 
     collapsed: true,
 });
@@ -179,6 +183,64 @@ gpxTrack.on("loaded", function(evt) {
 
 gpxTrack.on('addline', function(evt){
     hoehenProfil.addData(evt.line);
-})
+    console.log(evt.line)
+    console.log(evt.line.getLatLngs)
+    console.log(evt.line.getLatLngs()[0])
+    console.log(evt.line.getLatLngs()[0].lat)
+    console.log(evt.line.getLatLngs()[0].lng)
+    console.log(evt.line.getLatLngs()[0].meta)
+    console.log(evt.line.getLatLngs()[0].meta.ele)
+
+    // alle Segmente der Steigungslinie hinzufügen
+    let gpxLinie = evt.line.getLatLngs();
+    for (let i = 1; i < gpxLinie.length; i++) {
+        let p1 = gpxLinie[i-1];
+        let p2 = gpxLinie[i];
+        // console.log(p1.lat,p1.lng,p2.lat,p2.lng);
+    
+    // Entfernung zwischen den Punkten berechnen
+    let dist = myMap.distance(
+        [p1.lat,p1.lng],
+        [p2.lat,p2.lng]
+    );
+    // console.log(p1.lat,p1.lng,p2.lat,p2.lng,dist)
+
+    // Höhenunterschied berechnen
+    let delta = p2.meta.ele - p1.meta.ele;
+    // console.log(p1.lat,p1.lng,p2.lat,p2.lng,dist,delta)
+
+    // Steigung in % berechnen
+    /* let proz = 0;
+    if (dist > 0) {
+        proz = (delta / dist * 100.0).toFixed(1);
+    } ODER SO: */
+    let proz = (dist > 0) ? (delta / dist * 100.0).toFixed(1) : 0;
+    // Bedingung ? Ausdruck1 : (: steht für sonst) Ausdruck2
+    console.log(p1.lat,p1.lng,p2.lat,p2.lng,dist,delta,proz)
+
+    // verschiedene Farben für Steigung bzw Abstieg
+    let farbe = 
+        proz > 10  ? "#cb181d" : 
+        proz > 6   ? "#fb6a4a" : 
+        proz > 2   ? "#fcae91" : 
+        proz > 0   ? "#fee5d9" : 
+        proz > -2  ? "#edf8e9" : 
+        proz > -6  ? "#bae4b3" : 
+        proz > -10 ? "#74c476" : 
+                     "#238b45";
+
+     // Farbauswahl: http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3
+
+    let segment = L.polyline(
+        [
+            [p1.lat,p1.lng],
+            [p2.lat,p2.lng],
+        ], {
+                color: farbe,
+                weight : 10,
+            }
+        ).addTo(OverlaySteigung);
+    }
+});
 // um die Position zu bestimmen im leaflet.elevation.src.js und min.js L.Browser.touch durch L.Browser.mobile ersetzen
 
